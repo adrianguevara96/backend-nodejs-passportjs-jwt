@@ -5,6 +5,8 @@ const CustomersService = require('./../services/customers.service');
 const validatorHandler = require('./../middlewares/validator.handler');
 const { createCustomerSchema , updateCustomerSchema, getCustomerSchema } = require('./../schemas/customer.schema')
 
+//middleware authorization
+const { checkApiKey } = require('./../middlewares/auth.handler')
 const service = new CustomersService();
 const router = express.Router();
 
@@ -19,6 +21,7 @@ router.get('/', async (req, res, next) => {
 
 router.get(
   '/:id',
+  checkApiKey,
   validatorHandler(getCustomerSchema, 'params'),
   async (req,res, next) => {
     try{

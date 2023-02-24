@@ -1,8 +1,14 @@
 const express = require('express');
 const routerApi = require('./routes');
 
-//Middleware
+//============ Middlewares ============
+
+//Authorization handler
+const { checkApiKey } = require('./middlewares/auth.handler');
+//Error handler
 const { logError, errorHandler, boomErrorHandler, sequelizeErrorHandler } = require('./middlewares/error.handler');
+
+//=====================================
 
 //Cors
 const cors = require('cors');
@@ -34,8 +40,10 @@ routerApi(app);
 
 //Middleware
 app.use(logError);
-//sequelizeErrorHandler
+
+//sequelizeErrorHandler - ORM
 app.use(sequelizeErrorHandler);
+
 app.use(boomErrorHandler);
 app.use(errorHandler);
 
