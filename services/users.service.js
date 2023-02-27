@@ -1,10 +1,7 @@
 const boom = require('@hapi/boom');
 
-//bd connection
-// const getConnection = require('../../libs/postgres');
-
-//bd pool connection
-// const pool = require('../../libs/postgres.pool')
+//hash password
+const bcrypt = require('bcrypt');
 
 //bd sequelize connection
 const sequelize = require('./../libs/sequelize');
@@ -13,29 +10,21 @@ const { models } = require('./../libs/sequelize');
 
 class UsersService {
 
-  constructor() {
-    //se inicializa el array de usuarios vacio
-    // this.users = [];
-
-    //inicializamos el pool de la bd
-    // this.pool = pool;
-
-    //por si llega a dar un error, que lo presente.
-    // this.pool.on('error', (err) => console.error(err));
-  }
+  constructor() {}
 
   async create(data) {
-    //create a query
-    // const query = `INSERT INTO USERS(name, lastname, address) VALUES('${data.name}', '${data.lastname}', '${data.address}')`;
+    //hash password
+    const hash = await bcrypt.hash(data.password, 10);
 
-    //create a response
-    // const response = await this.pool.query(query);
+    //create user
+    const newUser = await models.User.create({
+      ...data,
+      password: hash
+    });
 
-    //send response
-    // if(response.rowCount > 0) return data;
+    //delete password to show user
+    delete newUser.dataValues.password;
 
-    //=== Create with sequelize ===
-    const newUser = await models.User.create(data);
     return newUser;
   }
 
