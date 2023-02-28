@@ -22,6 +22,9 @@ app.use(express.json());
 //cors - all domains
 app.use(cors());
 
+//passport strategy
+require('./utils/auth');
+
 //cors - uniques domains
 // var whitelist = ['http://www.localhost:8080', 'https://myapp.com'];
 // var corsOptions = {
