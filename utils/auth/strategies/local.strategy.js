@@ -35,4 +35,4 @@ const LocalStrategy = new Strategy(
     }
 );
 
-module.exports = { LocalStrategy };
+module.exports =  LocalStrategy ;
