@@ -56,6 +56,27 @@ router.post(
   }
 );
 
+//create order from jwt
+router.post(
+  '/create',
+  passport.authenticate('jwt', {session: false}),
+  // validatorHandler(createOrderSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      //body
+      const body = { userId: req.user.sub};
+      const newOrder = await service.createFromJWT(body);
+      //response
+      res.json({
+        message: "order added",
+        data: newOrder
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+);
+
 router.patch(
   '/:id',
   passport.authenticate('jwt', {session: false}),

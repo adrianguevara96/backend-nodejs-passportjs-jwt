@@ -15,6 +15,24 @@ class OrderService {
     return newOrder;
   }
 
+  //create order from jwt
+  async createFromJWT(data) {
+    console.log("data: ", data)
+    const customer = await models.Customer.findOne({
+      where: {
+        userId: data.userId
+      }
+    });
+    console.log("customer: ?", customer);
+    if(!customer) throw boom.notFound('Customer do not exist');
+
+    const order = { customerId: customer.id}
+    //create a new category
+    const newOrder = await models.Order.create(order);
+
+    return newOrder;
+  }
+
   async find() {
     //find all categories
     const response = await models.Order.findAll({
@@ -45,6 +63,26 @@ class OrderService {
 
     //send response
     return order;
+  }
+
+  async findByUser(userId) {
+    //find all user's order
+    const orders = await models.Order.findAll({
+      where: {
+        //permite usar data de las asociaciaones $-$
+        '$customer.user.id$': userId
+      },
+      include: [
+        {
+          association: 'customer',
+          include: ['user']
+        }
+      ]
+    });
+
+    if(orders.length === 0) throw boom.notFound('Orders do not exist');
+
+    return orders;
   }
 
   async update(id, changes) {
