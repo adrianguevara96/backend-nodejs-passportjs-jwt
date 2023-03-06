@@ -4,9 +4,20 @@ const Joi = require('joi');
 const email = Joi.string().email();
 const password = Joi.string().min(8);
 
+const token = Joi.string().min(32);
+
 const authUserSchema = Joi.object({
     email: email.required(),
     password: password.required()
 });
 
-module.exports = { authUserSchema }
+const recoveryPasswordSchema = Joi.object({
+    email: email.required()
+});
+
+const createNewPasswordSchema = Joi.object({
+    token: token.required(),
+    password: password.required()
+})
+
+module.exports = { authUserSchema, recoveryPasswordSchema, createNewPasswordSchema }

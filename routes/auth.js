@@ -1,13 +1,15 @@
 const express = require('express');
 const passport = require('passport');
-const jwt = require('jsonwebtoken');
-const { config } = require('./../config/config.js');
 
 //services
+const AuthService = require('./../services/auth.service');
+
 const validatorHandler = require('./../middlewares/validator.handler');
-const { authUserSchema } = require('./../schemas/auth.schema')
+const { authUserSchema, recoveryPasswordSchema, createNewPasswordSchema } = require('./../schemas/auth.schema')
 
 const router = express.Router();
+
+const service = new AuthService();
 
 router.post(
   '/login',
@@ -15,23 +17,40 @@ router.post(
   passport.authenticate('local', {session: false}),
   async (req, res, next) => {
     try {
-      //define payload to sign
-      const payload = {
-        sub: req.user.id,
-        role: req.user.role
-      }
+      const user = req.user;
+      delete user.dataValues.recoveryToken;
 
-      //define token
-      const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '1d'} );
-      
-      //response
-      res.json({
-        message: "user authenticated",
-        data: {
-          user: req.user,
-          token: token
-        }
-      })
+      res.json( await service.signToken(user));
+    } catch (error) {
+      next(error)
+    }
+  }
+);
+
+router.post(
+  '/recovery',
+  validatorHandler(recoveryPasswordSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      //body
+      const { email } = req.body;
+      const response = await service.sendRecoveryPassword(email);
+      res.json(response);
+    } catch (error) {
+      next(error)
+    }
+  }
+);
+
+router.post(
+  '/change-password',
+  validatorHandler(createNewPasswordSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      //body
+      const { token, password } = req.body;
+      const response = await service.changePassword(token, password);
+      res.json(response);
     } catch (error) {
       next(error)
     }

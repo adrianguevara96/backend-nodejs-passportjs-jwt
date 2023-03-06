@@ -67,13 +67,13 @@ class UsersService {
 
   async findByEmail(email) {
     //Ahora con los metodos propios de sequelize
-    const response = await models.User.findOne({
+    const user = await models.User.findOne({
       where: { email }
     });
 
-    if(response.length === 0) throw boom.notFound('Email not found');
+    if(!user) throw boom.unauthorized();
 
-    return response;
+    return user;
   }
 
   async update(id, changes) {
