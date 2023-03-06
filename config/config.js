@@ -16,6 +16,9 @@ const config = {
 
     apiKey: process.env.API_KEY,
 
-    jwtSecret: process.env.JWT_SECRET
+    jwtSecret: process.env.JWT_SECRET,
+
+    gmailEmail: process.env.G_EMAIL,
+    gmailPassword: process.env.G_PASSWORD
 }
 module.exports = { config };
