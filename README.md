@@ -1,12 +1,22 @@
 # Plantilla de Backend
-    La siguiente plantilla consta de un backend con:
-        Nodejs, Expressjs, Sequelize como ORM, Base de datos como Postgres o Mysql (dependiendo de la que quieras utilizar), Passportjs y JWT
+    La siguiente plantilla consta de un backend desarrollado a través de Nodejs, Expressjs,
+    Sequelize como ORM, Base de datos como Postgres o Mysql (dependiendo de la que quieras utilizar
+    a través de Docker), Passportjs y JWT.
 
-# Instalación de Dependencias con NPM
-    Ejecutamos el siguiente comando
-        npm install
+# Instalación
 
-# Ejecutar Docker
+## Clonar el proyecto
+    * git clone https://github.com/adrianguevara96/backend-nodejs-passportjs-jwt.git
+## Ingresamos a la carpeta del proyecto
+    * cd backend-nodejs-passportjs-jwt
+## Instalación de Dependencias con NPM
+    Ejecutamos el siguiente comando **npm install**
+
+## Renombrar el archivo .env.example a .env
+    Una vez hayas renombrado el archivo, se deben cambiar los valores de las varaibles
+    con sus correspondientes valores
+
+## Ejecutar Docker
 En nuestro archivo docker-compose tenemos 4 imágenes:
     1. postgres (base de datos)
     2. pgadmin (visualizador de bd para postgres)
@@ -25,9 +35,9 @@ En nuestro archivo docker-compose tenemos 4 imágenes:
 
     Luego, se ejecuta el siguiente comando para correr docker y sus imágenes.
 
-        docker-compose up -d
+        **docker-compose up -d**
 
-# Revisar el funcionamiento de la bd y su visualizador
+## Revisar el funcionamiento de la bd y su visualizador
     Si estamos en local, acceder al siguiente enlace para visualizar nuestra database
         http://localhost:5055/
 
@@ -49,11 +59,40 @@ En nuestro archivo docker-compose tenemos 4 imágenes:
             Create -> Database
                 Database            my_store_2
 
-# Migraciones
-    Corremos las migraciones con el siguiente comando y revisar con el visualizador que todas las tablas se hayan creado
-        npm run migrations:run
-    Obviar el siguiente error: "ERROR: column "role" of relation "users" already exists"
+## Migraciones (migrations)
+    Ejecutamos las migraciones con el siguiente comando y revisamos con el visualizador que todas
+    las tablas se hayan creado
+        **npm run migrations:run**
 
-# Ejecutamos el servicio 
+## Semillas (seeders)
+    Ejecutamos las semilas con el siguiente comando y revisamos con el visualizador la tabla users
+    y podemos ver que tenemos a un usuario administrador creado
+        **npm run seeds:run**
+
+## Ejecutamos el servicio 
     Para correr el servicio ejecutamos el siguiente comando
         npm run dev
+    El servicio correrá por defecto en el puerto 3000
+
+## Estructura del proyecto
+
+    src
+    ├── config              # Environment variables config
+    ├── db                  # DB related files like models, migrations & seeders
+    │   ├── migrations
+    │   ├── models
+    │   ├── seeders
+    ├── libs                # DB connection
+    ├── middlewares         # Middlewares & handlers (Auth, Error, Validator)
+    ├── routes              # Application routes / endpoints
+    ├── schemas             # Application Joi schemas
+    ├── services            # Services for all the endpoints of the app
+    ├── utils               # Utilities
+    │   ├── auth            
+    │   │   ├── strategies  # Passport strategies (jwt, local)
+    ├── index.js            # Application entry point
+    ├── package.json        # Scripts and dependencies
+    ├── package-lock.json 
+    └── .gitignore
+
+###
